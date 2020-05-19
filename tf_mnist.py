@@ -3,7 +3,7 @@ import numpy
 from tensorflow import keras
 
 #Network and training parameters
-EPOCHS = 200
+EPOCHS = 50
 BATCH_SIZE = 128
 VERBOSE = 1
 NB_CLASSES = 10 #number of outputs = number of digits
@@ -33,7 +33,13 @@ y_test = tf.keras.utils.to_categorical(y_test, NB_CLASSES)
 
 #Build the model
 model = tf.keras.models.Sequential()
-model.add(keras.layers.Dense(NB_CLASSES, input_shape = (RESHAPED,), name = 'dense_layer', activation = 'softmax'))
+model.add(keras.layers.Dense(N_HIDDEN, input_shape = (RESHAPED,), name = 'dense_layer', activation = 'relu'))
+model.add(keras.layers.Dense(N_HIDDEN, name = 'dense_layer_2', activation = 'relu'))
+model.add(keras.layers.Dense(NB_CLASSES, name = 'dense_layer_3', activation = 'softmax'))
+
+
+#Summary of the model
+model.summary()
 
 
 #Compiling the model
@@ -44,6 +50,6 @@ model.compile(optimizer = 'SGD', loss = 'categorical_crossentropy', metrics = ['
 model.fit(X_train, y_train, batch_size = BATCH_SIZE, epochs = EPOCHS, verbose = VERBOSE, validation_split = VALIDATION_SPLIT)
 
 
-#Evaluate the model
+#Evaluating the model
 test_loss, test_acc = model.evaluate(X_test, y_test)
 print("Test accuracy: ", test_acc)
