@@ -3,13 +3,12 @@ import numpy
 from tensorflow import keras
 
 #Network and training parameters
-EPOCHS = 200
+EPOCHS = 50
 BATCH_SIZE = 128
 VERBOSE = 1
 NB_CLASSES = 10 #number of outputs = number of digits
 N_HIDDEN = 128
 VALIDATION_SPLIT = 0.2 #save for validation
-DROPOUT = 0.3
 
 #load mnist dataset
 mnist = keras.datasets.mnist
@@ -22,8 +21,8 @@ X_train = X_train.astype('float32')
 X_test = X_test.astype('float32')
 
 #Input normalization to be within [0, 1]
-X_train /= 255.0
-X_test /= 255.0
+X_train /= 255
+X_test /= 255
 print(X_train.shape[0], 'train_samples')
 print(X_test.shape[0], 'test_samples')
 
@@ -32,13 +31,15 @@ y_train = tf.keras.utils.to_categorical(y_train, NB_CLASSES)
 y_test = tf.keras.utils.to_categorical(y_test, NB_CLASSES)
 
 
-#Build the model; added dropout layers
+#Build the model
 model = tf.keras.models.Sequential()
 model.add(keras.layers.Dense(N_HIDDEN, input_shape = (RESHAPED,), name = 'dense_layer', activation = 'relu'))
-model.add(keras.layers.Dropout(DROPOUT))
 model.add(keras.layers.Dense(N_HIDDEN, name = 'dense_layer_2', activation = 'relu'))
-model.add(keras.layers.Dropout(DROPOUT))
 model.add(keras.layers.Dense(NB_CLASSES, name = 'dense_layer_3', activation = 'softmax'))
+
+
+#Summary of the model
+model.summary()
 
 
 #Compiling the model
